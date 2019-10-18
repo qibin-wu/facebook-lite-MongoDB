@@ -61,7 +61,7 @@
      </tr>
       <tr>
         <td><input type="submit" value="submit"></td>
-        <td><a href="http://localhost:8000/index.html">Cancel</a></td>
+        <td><a href="http://localhost:8000">Cancel</a></td>
       </tr>
     </table>
 
