@@ -32,4 +32,4 @@ $doc = array(
 
 $bulk->insert($doc);
 $mongo->executeBulkWrite('MyDB.Members', $bulk);
-echo "<script>alert('Register Successfully!');location.href='index.html';</script>";
+echo "<script>alert('Register Successfully!');location.href='localhost:8000';</script>";

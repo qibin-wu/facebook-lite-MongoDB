@@ -133,6 +133,7 @@ session_start();
                                       $rows = $mng->executeQuery('MyDB.Friendship', $query);
                                       foreach ($rows as $row)
                                       {
+                                        if($row->status=='Accepted')
                                          $isFriend=true;
                                       }
 
@@ -178,29 +179,20 @@ session_start();
                                       }
 
                                     }
-                                    function checkVisible($postss){
-                                      $personal=false;
-                                      $everyone=false;
-                                      $friend=false;
-
+                                  function checkVisible($postss){
+                                      $personal=false;$everyone=false;$friend=false;$private=false;
                                       $mng = new MongoDB\Driver\Manager("mongodb://mongo:27017");
                                       $command = new MongoDB\Driver\Command([
                                           'aggregate' => 'Post',
-                                          'pipeline' => [
-                                              ['$lookup' => ["from" => "Members","localField" => "from","foreignField" => "email","as" => "members_post"]],
-
-                                          ],
-                                          'cursor' => new \stdClass,
-                                      ]);
+                                          'pipeline' => [['$lookup' => ["from" => "Members",
+                                          "localField" => "from","foreignField" => "email","as" => "members_post"]],],
+                                          'cursor' => new \stdClass,]);
                                       $cursor = $mng->executeCommand('MyDB', $command);
-
                                       foreach ($cursor as $document)
                                       {
                                         $etID=$postss->from;
-
                                         if($etID==$document->from)
                                         {
-
                                           $doc=  $document->members_post;
                                           foreach ($doc as $d)
                                           {
@@ -210,22 +202,28 @@ session_start();
                                               $everyone=true;
                                               break;
                                             }
+                                            if($vl=='private')
+                                            {
+                                              $private=true;
+                                              break;
+                                            }
                                           }
                                         }
-
                                       }
-
-                                      $eti=$postss->from;
+                                        $eti=$postss->from;
                                       if($eti==$_SESSION["login_user"])
                                       {
                                         $personal=true;
+                                      }
+                                      if($private)
+                                      {
+                                        return false;
                                       }
 
                                       if(checkFriend($postss))
                                       {
                                         $friend=true;
                                       }
-
 
                                       if($personal or $everyone or $friend)
                                       {
@@ -234,11 +232,6 @@ session_start();
                                       else {
                                         return false;
                                       }
-
-
-
-
-
                                     }
                                     function getscreen_name($email){
                                       try
@@ -272,7 +265,7 @@ session_start();
                                     }
 
                                     function getPost()
-                                    {                                  
+                                    {
                                       $mng = new MongoDB\Driver\Manager("mongodb://mongo:27017");
                                       $filter =  [];
                                       $options = [];
