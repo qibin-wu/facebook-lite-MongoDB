@@ -99,7 +99,7 @@ session_start();
                 <td><li><a href="delete.php">Delete Account</a></li></td>
               </tr>
               <tr>
-                <td><li><a href="index.html">Log Out</a></li></td>
+                <td><li><a href="/">Log Out</a></li></td>
               </tr>
           </table>
 
